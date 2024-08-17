@@ -5,11 +5,11 @@ slint::slint! {
         VerticalBox
     } from "std-widgets.slint";
 
-    export component App {
+    export component TaxCalculator {
         in-out property <int> price: 100;
         in property <int> tax: 0;
         in property <int> total: 0;
-        callback clicked <=> calculateButton.clicked;
+        callback calculate <=> calculate-button.clicked;
 
         VerticalBox {
             Text {
@@ -52,7 +52,7 @@ slint::slint! {
                     }
                 }
             }
-            calculateButton := Button {
+            calculate-button := Button {
                 text: "Calculate";
                 primary: true;
             }
@@ -61,16 +61,16 @@ slint::slint! {
 }
 
 fn main() {
-    let app = App::new().unwrap();
-    let weak = app.as_weak();
-    app.on_clicked(move || {
-        let app = weak.upgrade().unwrap();
-        let price = app.get_price();
+    let calculator = TaxCalculator::new().unwrap();
+    let weak = calculator.as_weak();
+    calculator.on_calculate(move || {
+        let calculator = weak.upgrade().unwrap();
+        let price = calculator.get_price();
         println!("price: {}", price);
         let tax = price / 10;
         let total = price + tax;
-        app.set_tax(tax);
-        app.set_total(total);
+        calculator.set_tax(tax);
+        calculator.set_total(total);
     });
-    app.run().unwrap();
+    calculator.run().unwrap();
 }
