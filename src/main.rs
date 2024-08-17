@@ -6,9 +6,9 @@ slint::slint! {
     } from "std-widgets.slint";
 
     export component TaxCalculator {
-        in-out property <int> price: 100;
-        in property <int> tax: 0;
-        in property <int> total: 0;
+        in property <string> price <=> price-line-edit.text;
+        in property <string> tax;
+        in property <string> total;
         callback calculate <=> calculate-button.clicked;
 
         VerticalBox {
@@ -24,11 +24,7 @@ slint::slint! {
                         text: "Price";
                         vertical-alignment: TextVerticalAlignment.center;
                     }
-                    LineEdit {
-                        text: price;
-                        edited => {
-                            price = self.text.to-float();
-                        }
+                    price-line-edit := LineEdit {
                     }
                 }
                 Row {
@@ -65,12 +61,14 @@ fn main() {
     let weak = calculator.as_weak();
     calculator.on_calculate(move || {
         let calculator = weak.upgrade().unwrap();
-        let price = calculator.get_price();
-        println!("price: {}", price);
+        let price: i32 = calculator.get_price().parse().unwrap();
         let tax = price / 10;
         let total = price + tax;
-        calculator.set_tax(tax);
-        calculator.set_total(total);
+        calculator.set_tax(tax.to_string().into());
+        calculator.set_total(total.to_string().into());
     });
+    calculator.set_price("0".into());
+    calculator.set_tax("0".into());
+    calculator.set_total("0".into());
     calculator.run().unwrap();
 }
