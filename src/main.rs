@@ -13,7 +13,7 @@ slint::slint! {
 
         VerticalBox {
             Text {
-                text: "Hello, World";
+                text: "Tax calculator";
             }
             LineEdit {
                 text: price;
