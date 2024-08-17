@@ -14,21 +14,47 @@ slint::slint! {
         VerticalBox {
             Text {
                 text: "Tax calculator";
+                horizontal-alignment: TextHorizontalAlignment.center;
+                vertical-alignment: TextVerticalAlignment.center;
             }
-            LineEdit {
-                text: price;
-                edited => {
-                    price = self.text.to-float();
+            GridLayout {
+                spacing: 5px;
+                Row {
+                    Text {
+                        text: "Price";
+                        vertical-alignment: TextVerticalAlignment.center;
+                    }
+                    LineEdit {
+                        text: price;
+                        edited => {
+                            price = self.text.to-float();
+                        }
+                    }
                 }
-            }
-            LineEdit {
-                text: tax;
-            }
-            LineEdit {
-                text: total;
+                Row {
+                    Text {
+                        text: "Tax";
+                        vertical-alignment: TextVerticalAlignment.center;
+                    }
+                    LineEdit {
+                        text: tax;
+                        read-only: true;
+                    }
+                }
+                Row {
+                    Text {
+                        text: "Total";
+                        vertical-alignment: TextVerticalAlignment.center;
+                    }
+                    LineEdit {
+                        text: total;
+                        read-only: true;
+                    }
+                }
             }
             calculateButton := Button {
                 text: "Calculate";
+                primary: true;
             }
         }
     }
