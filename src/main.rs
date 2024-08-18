@@ -1,21 +1,30 @@
 slint::slint! {
     import {
+        AboutSlint,
         Button,
+        HorizontalBox,
         LineEdit,
         VerticalBox
     } from "std-widgets.slint";
 
-    export component TaxCalculator {
+    export component TaxCalculator inherits Window {
         in property <string> price <=> price-line-edit.text;
         in property <string> tax;
         in property <string> total;
         callback calculate <=> calculate-button.clicked;
+        title: "Tax calculator";
+        preferred-width: 400px;
+        preferred-height: 330px;
 
         VerticalBox {
             Text {
                 text: "Tax calculator";
+                font-size: 20px;
+                font-weight: 600;
                 horizontal-alignment: TextHorizontalAlignment.center;
                 vertical-alignment: TextVerticalAlignment.center;
+            }
+            Rectangle {
             }
             GridLayout {
                 spacing: 5px;
@@ -49,9 +58,24 @@ slint::slint! {
                     }
                 }
             }
-            calculate-button := Button {
-                text: "Calculate";
-                primary: true;
+            Rectangle {
+            }
+            HorizontalLayout {
+                alignment: LayoutAlignment.center;
+                calculate-button := Button {
+                    text: "Calculate";
+                    primary: true;
+                    width: parent.width * 60%;
+                }
+            }
+            Rectangle {
+            }
+            HorizontalLayout {
+                alignment: LayoutAlignment.center;
+                max-height: 90px;
+                min-height: 90px;
+                AboutSlint {
+                }
             }
         }
     }
