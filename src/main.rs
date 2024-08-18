@@ -25,6 +25,7 @@ slint::slint! {
                         vertical-alignment: TextVerticalAlignment.center;
                     }
                     price-line-edit := LineEdit {
+                        input-type: number;
                     }
                 }
                 Row {
@@ -61,7 +62,10 @@ fn main() {
     let weak = calculator.as_weak();
     calculator.on_calculate(move || {
         let calculator = weak.upgrade().unwrap();
-        let price: i32 = calculator.get_price().parse().unwrap();
+        let price = match calculator.get_price().parse::<i32>() {
+            Ok(price) => price,
+            Err(_) => 0,
+        };
         let tax = price / 10;
         let total = price + tax;
         calculator.set_tax(tax.to_string().into());
