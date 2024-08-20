@@ -4,6 +4,7 @@ slint::slint! {
         Button,
         HorizontalBox,
         LineEdit,
+        StandardButton,
         VerticalBox
     } from "std-widgets.slint";
 
@@ -12,9 +13,10 @@ slint::slint! {
         in property <string> tax;
         in property <string> total;
         callback calculate <=> calculate-button.clicked;
+        callback show_about <=> about-button.clicked;
         title: "Tax calculator";
         preferred-width: 400px;
-        preferred-height: 330px;
+        preferred-height: 300px;
 
         VerticalBox {
             Text {
@@ -71,6 +73,32 @@ slint::slint! {
             Rectangle {
             }
             HorizontalLayout {
+                alignment: LayoutAlignment.end;
+                about-button := Button {
+                    text: "About";
+                }
+            }
+        }
+    }
+
+    export component AboutDialog inherits Dialog {
+        title: "About";
+        VerticalBox {
+            Text {
+                text: "tax_calculator_slint";
+                font-size: 20px;
+                font-weight: 600;
+                horizontal-alignment: TextHorizontalAlignment.center;
+            }
+            Text {
+                text: "0.1.0";
+                horizontal-alignment: TextHorizontalAlignment.center;
+            }
+            Text {
+                text: "(c) Yasuaki Gohko";
+                horizontal-alignment: TextHorizontalAlignment.center;
+            }
+            HorizontalLayout {
                 alignment: LayoutAlignment.center;
                 max-height: 90px;
                 min-height: 90px;
@@ -94,6 +122,10 @@ fn main() {
         let total = price + tax;
         calculator.set_tax(tax.to_string().into());
         calculator.set_total(total.to_string().into());
+    });
+    calculator.on_show_about(move || {
+        let dialog = AboutDialog::new().unwrap();
+        dialog.show().unwrap();
     });
     calculator.set_price("0".into());
     calculator.set_tax("0".into());
