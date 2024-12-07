@@ -34,8 +34,8 @@ slint::slint! {
         in property <string> price <=> price-line-edit.text;
         in property <string> tax;
         in property <string> total;
+        property <bool> about-visible;
         callback calculate <=> calculate-button.clicked;
-        callback show_about <=> about-button.clicked;
         title: "Tax calculator";
         preferred-width: 400px;
         preferred-height: 300px;
@@ -96,35 +96,59 @@ slint::slint! {
             }
             HorizontalLayout {
                 alignment: LayoutAlignment.end;
-                about-button := Button {
+                Button {
                     text: "About";
+                    clicked => {
+                        about-visible = true;
+                    }
                 }
             }
         }
-    }
 
-    export component AboutDialog inherits Dialog {
-        title: "About";
-        VerticalBox {
-            Text {
-                text: "tax_calculator_slint";
-                font-size: 20px;
-                font-weight: 600;
-                horizontal-alignment: TextHorizontalAlignment.center;
+        if about-visible: Rectangle {
+            width: 100%;
+            height: 100%;
+            background: #0000007f;
+            TouchArea {
             }
-            Text {
-                text: "0.1.0";
-                horizontal-alignment: TextHorizontalAlignment.center;
-            }
-            Text {
-                text: "(c) Yasuaki Gohko";
-                horizontal-alignment: TextHorizontalAlignment.center;
-            }
-            HorizontalLayout {
-                alignment: LayoutAlignment.center;
-                max-height: 90px;
-                min-height: 90px;
-                AboutSlint {
+            Rectangle {
+                width: 300px;
+                height: 250px;
+                background: #EFEFEFFF;
+                border-radius: 20px;
+                drop-shadow-blur: 100px;
+                drop-shadow-color: #0000007F;
+                Dialog {
+                    width: parent.width - 10px;
+                    VerticalBox {
+                        Text {
+                            text: "tax_calculator_slint";
+                            font-size: 20px;
+                            font-weight: 600;
+                            horizontal-alignment: TextHorizontalAlignment.center;
+                        }
+                        Text {
+                            text: "0.1.0";
+                            horizontal-alignment: TextHorizontalAlignment.center;
+                        }
+                        Text {
+                            text: "(c) Yasuaki Gohko";
+                            horizontal-alignment: TextHorizontalAlignment.center;
+                        }
+                        HorizontalLayout {
+                            alignment: LayoutAlignment.center;
+                            max-height: 90px;
+                            min-height: 90px;
+                            AboutSlint {
+                            }
+                        }
+                    }
+                    StandardButton {
+                        kind: close;
+                        clicked => {
+                            about-visible = false;
+                        }
+                    }
                 }
             }
         }
@@ -144,10 +168,6 @@ fn main() {
         let total = price + tax;
         calculator.set_tax(tax.to_string().into());
         calculator.set_total(total.to_string().into());
-    });
-    calculator.on_show_about(move || {
-        let dialog = AboutDialog::new().unwrap();
-        dialog.show().unwrap();
     });
     calculator.set_price("0".into());
     calculator.set_tax("0".into());
